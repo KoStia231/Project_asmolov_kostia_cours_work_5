@@ -9,3 +9,5 @@ class HHClients(ApiClient):
     def base_url(self) -> str:
         return self.__base_url
 
+    def _get(self, url: str, params: dict) -> list[dict]:
+        """метод для получение всех работодателей"""
