@@ -7,7 +7,7 @@ class HHClients(ApiClient):
         self.__base_url = 'https://api.hh.ru'
 
     def employers_search(self, search: str, *, only_with_vacancies: bool = True) -> list[ShortEmployersInfo]:
-        """поиск работадателя по имени"""
+        """Поиск компании по имени"""
         params = {
             'text': search,
             'only_with_vacancies': only_with_vacancies
@@ -25,7 +25,7 @@ class HHClients(ApiClient):
         ]
 
     def get_employer_info(self, employer_id: int) -> FullEmployersInfo:
-        """"получение инфы о работадателе"""
+        """"Получение инфы о компании"""
         employer_info = self._get(f'/employers/{employer_id}')
         return FullEmployersInfo(
             id=employer_id,
@@ -37,7 +37,7 @@ class HHClients(ApiClient):
         )
 
     def get_employer_vacancies(self, employer_id) -> list[VacanciesInfo]:
-        """получение инфы вакансии"""
+        """Получение инфы вакансии"""
         params = {
             'employer_id': employer_id,
             'only_with_salary': True
