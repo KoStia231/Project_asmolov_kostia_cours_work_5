@@ -2,9 +2,10 @@ from src.api_clients import HHClients
 
 
 def main():
-    w = HHClients()
-    q = w.employers_search('VK')
-    print(q)
+    name = input('Press enter to')
+    hh_cleint = HHClients()
+    result = hh_cleint.get_employer_vacancies(name)
+    print(result)
 
 
 if __name__ == '__main__':

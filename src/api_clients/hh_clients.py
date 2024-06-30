@@ -1,5 +1,5 @@
 from src.api_clients.base import ApiClient
-from src.api_clients.utils import ShortEmployersInfo
+from src.api_clients.utils import ShortEmployersInfo, FullEmployersInfo, VacanciesInfo, VacanciesType
 
 
 class HHClients(ApiClient):
@@ -7,6 +7,7 @@ class HHClients(ApiClient):
         self.__base_url = 'https://api.hh.ru'
 
     def employers_search(self, search: str, *, only_with_vacancies: bool = True) -> list[ShortEmployersInfo]:
+        """поиск работадателя по имени"""
         params = {
             'text': search,
             'only_with_vacancies': only_with_vacancies
@@ -21,6 +22,38 @@ class HHClients(ApiClient):
                 open_vacancies=employer['open_vacancies'],
             )
             for employer in employers
+        ]
+
+    def get_employer_info(self, employer_id: int) -> FullEmployersInfo:
+        """"получение инфы о работадателе"""
+        employer_info = self._get(f'/employers/{employer_id}')
+        return FullEmployersInfo(
+            id=employer_id,
+            name=employer_info['name'],
+            url=employer_info['alternate_url'],
+            site_url=employer_info['site_url'],
+            region=employer_info['area']['name'],
+            open_vacancies=employer_info['open_vacancies'],
+        )
+
+    def get_employer_vacancies(self, employer_id) -> list[VacanciesInfo]:
+        """получение инфы вакансии"""
+        params = {
+            'employer_id': employer_id,
+            'only_with_salary': True
+        }
+        vacancies = self._get_items('/vacancies', params=params)
+        return [
+            VacanciesInfo(
+                id=int(vacancy['id']),
+                name=vacancy['name'],
+                url=vacancy['alternate_url'],
+                salary_from=vacancy['salary'].get('from'),
+                salary_to=vacancy['salary'].get('to'),
+                employer_id=employer_id,
+                type=VacanciesType[vacancy['type']['id']],
+            )
+            for vacancy in vacancies
         ]
 
     @property
