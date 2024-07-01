@@ -34,7 +34,7 @@ class PostgresDBManager(DBManager):
             cursor.execute(sql)
             return cursor.fetchall()
 
-    def get_all_vacancies(self):
+    def get_all_vacancies(self) -> list:
         """Получает список всех вакансий с указанием названия компании, названия вакансии, зарплаты и ссылки на вакансию."""
         sql = """
             SELECT e.name, v.name, v.salary_from, v.salary_to, v.url
@@ -58,14 +58,14 @@ class PostgresDBManager(DBManager):
 
         with self.connection.cursor() as cursor:
             cursor.execute(sql)
-            mun_salary, max_salary = cursor.fetchone()
-            avg_salary = (mun_salary + max_salary) / 2
+            min_salary, max_salary = cursor.fetchone()
+            avg_salary = (min_salary + max_salary) / 2
             return round(avg_salary, 2)
 
-    def get_vacancies_with_higher_salary(self):
+    def get_vacancies_with_higher_salary(self) -> list:
         """Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям."""
         sql = """
-            SELECT v.name, v.salary_from, v.salary_to
+            SELECT v.name, v.salary_from, v.salary_to, v.url
             FROM vacancies as v
             WHERE (v.salary_from + v.salary_to) / 2 > (
                 SELECT AVG((salary_from + salary_to) / 2) 
@@ -83,7 +83,7 @@ class PostgresDBManager(DBManager):
     def get_vacancies_with_keyword(self, keyword):
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова."""
         sql = """
-            SELECT v.name, v.salary_from, v.salary_to
+            SELECT v.name, v.salary_from, v.salary_to, v.url
             FROM vacancies as v
             WHERE v.name LIKE %s;
         """

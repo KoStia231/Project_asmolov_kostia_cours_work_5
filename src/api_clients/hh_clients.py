@@ -25,7 +25,7 @@ class HHClients(ApiClient):
         ]
 
     def get_employer_info(self, employer_id: int) -> FullEmployersInfo:
-        """"Получение инфы о компании"""
+        """"Получение инфы о компании по id"""
         employer_info = self._get(f'/employers/{employer_id}')
         return FullEmployersInfo(
             id=employer_id,
@@ -37,7 +37,7 @@ class HHClients(ApiClient):
         )
 
     def get_employer_vacancies(self, employer_id) -> list[VacanciesInfo]:
-        """Получение инфы вакансии"""
+        """Получение инфы вакансий от компании по id"""
         params = {
             'employer_id': employer_id,
             'only_with_salary': True,
