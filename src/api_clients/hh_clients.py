@@ -1,5 +1,5 @@
 from src.api_clients.base import ApiClient
-from src.api_clients.utils import ShortEmployersInfo, FullEmployersInfo, VacanciesInfo, VacanciesType
+from src.api_clients.data import ShortEmployersInfo, FullEmployersInfo, VacanciesInfo, VacanciesType
 
 
 class HHClients(ApiClient):
@@ -40,7 +40,8 @@ class HHClients(ApiClient):
         """Получение инфы вакансии"""
         params = {
             'employer_id': employer_id,
-            'only_with_salary': True
+            'only_with_salary': True,
+            'currency': 'RUR'
         }
         vacancies = self._get_items('/vacancies', params=params)
         return [

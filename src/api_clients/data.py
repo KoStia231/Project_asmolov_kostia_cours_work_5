@@ -32,7 +32,7 @@ class VacanciesInfo:
     id: int
     name: str
     url: str
-    salary_from: int | None
-    salary_to: int | None
+    salary_from: float | None
+    salary_to: float | None
     employer_id: int
     type: VacanciesType | None
